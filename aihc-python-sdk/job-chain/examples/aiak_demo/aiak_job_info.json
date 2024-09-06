@@ -1,0 +1,12 @@
+{
+    "MODEL_NAME": "llama2-7b",
+    "REPLICAS": "1",
+    "VERSION": "luyc-v4",
+    "TRAINING_PHASE": "pretrain",
+    "TP": "",
+    "PP": "",
+    "DATASET_NAME": "pile_llama_test",
+    "JSON_KEYS": "text",
+    "IMAGE": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
+    "MOUNT_PATH": "/root/pfs"
+}

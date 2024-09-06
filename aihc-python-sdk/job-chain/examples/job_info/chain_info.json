@@ -1,0 +1,101 @@
+{
+    "scrips_path": "/root/pfs/dev-test/job-chain/job_chain.py",
+    "config_path": "/root/pfs/dev-test/job-chain/examples/job_info/chain_info.json",
+    "api_config": {
+        "host": "aihc.bj.baidubce.com",
+        "ak": "",
+        "sk": ""
+    },
+    "resourcePoolId": "cce-e0isdmib",
+    "jobs": [
+        {
+            "name": "test-api-llama2-7b-4-luyc-job1",
+            "queue": "default",
+            "priority": "normal",
+            "jobFramework": "PyTorchJob",
+            "jobSpec": {
+                "command": "job1.sh",
+                "image": "registry.baidubce.com/aihc-aiak/aiak-megatron:ubuntu20.04-cu11.8-torch1.14.0-py38_v1.2.7.12_release",
+                "replicas": 1,
+                "envs": [
+                    {
+                        "name": "CUDA_DEVICE_MAX_CONNECTIONS",
+                        "value": "1"
+                    }
+                ]
+            },
+            "labels": [
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-id",
+                    "value": "69bb4999b2044af8bbda25aec2f1e1f2"
+                },
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-name",
+                    "value": ""
+                }
+            ],
+            "datasources": [
+                {
+                    "type": "pfs",
+                    "name": "pfs-oYQuh4",
+                    "mountPath": "/root/pfs"
+                }
+            ]
+        },
+        {
+            "queue": "default",
+            "priority": "normal",
+            "jobFramework": "PyTorchJob",
+            "name": "test-api-llama2-7b-4-job2",
+            "jobSpec": {
+                "command": "job2.sh",
+                "image": "registry.baidubce.com/aihc-aiak/aiak-megatron:ubuntu20.04-cu11.8-torch1.14.0-py38_v1.2.7.12_release",
+                "replicas": 1,
+                "envs": [
+                    {
+                        "name": "CUDA_DEVICE_MAX_CONNECTIONS",
+                        "value": "1"
+                    }
+                ]
+            },
+            "datasources": [
+                {
+                    "type": "pfs",
+                    "name": "pfs-7xWeAt",
+                    "mountPath": "/root/pfs"
+                }
+            ]
+        },
+        {
+            "queue": "default",
+            "priority": "normal",
+            "jobFramework": "PyTorchJob",
+            "name": "test-api-llama2-7b-4-job3",
+            "jobSpec": {
+                "command": "job3.sh",
+                "image": "registry.baidubce.com/aihc-aiak/aiak-megatron:ubuntu20.04-cu11.8-torch1.14.0-py38_v1.2.7.12_release",
+                "replicas": 1,
+                "resources": [
+                    {
+                        "name": "baidu.com/a800_80g_cgpu",
+                        "quantity": 8
+                    }
+                ],
+                "enableRDMA": true,
+                "envs": [
+                    {
+                        "name": "CUDA_DEVICE_MAX_CONNECTIONS",
+                        "value": "1"
+                    }
+                ]
+            },
+            "datasources": [
+                {
+                    "type": "pfs",
+                    "name": "pfs-oYQuh4",
+                    "mountPath": "/root/pfs"
+                }
+            ]
+        }
+    ]
+}
