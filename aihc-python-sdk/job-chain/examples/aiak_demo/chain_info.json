@@ -33,11 +33,11 @@
                     },
                     {
                         "name": "LOAD",
-                        "value": "/root/pfs/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-7b-hf"
+                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
                     },
                     {
                         "name": "SAVE",
-                        "value": "/root/pfs/mcore/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
+                        "value": "/root/pfs/models/llama2-7b/mcore/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
                     }
                 ]
             },
@@ -77,20 +77,16 @@
                         "value": "bos:/cce-ai-datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test.jsonl"
                     },
                     {
-                        "name": "INPUT_DATA_PATH",
-                        "value": "/root/pfs/cce-ai-datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test.jsonl"
-                    },
-                    {
                         "name": "TOKENIZER_PATH",
-                        "value": "/root/pfs/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-7b-hf"
+                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
                     },
                     {
                         "name": "INPUT_DATA",
-                        "value": "/root/pfs/cce-ai-datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test.jsonl"
+                        "value": "/root/pfs/datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test.jsonl"
                     },
                     {
                         "name": "OUTPUT_PREFIX",
-                        "value": "/root/pfs/cce-ai-datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test"
+                        "value": "/root/pfs/datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test"
                     },
                     {
                         "name": "JSON_KEYS",
@@ -129,15 +125,15 @@
                     },
                     {
                         "name": "DATA_PATH",
-                        "value": "/root/pfs/cce-ai-datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test_text_document"
+                        "value": "/root/pfs/datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test_text_document"
                     },
                     {
                         "name": "TOKENIZER_PATH",
-                        "value": "/root/pfs/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-7b-hf"
+                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
                     },
                     {
                         "name": "CHECKPOINT_PATH",
-                        "value": "/root/pfs/mcore/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
+                        "value": "/root/pfs/models/llama2-7b/mcore/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
                     }
                 ]
             },

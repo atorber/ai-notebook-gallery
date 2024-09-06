@@ -17,7 +17,7 @@ if [ ! -f "${INPUT_DATA}" ]; then
     cd linux-bcecmd-0.4.5
 
     echo "Start to download data..."
-    ./bcecmd bos cp ${DATASET_BOS_PATH} ${INPUT_DATA_PATH} --restart --quiet --yes
+    ./bcecmd bos cp ${DATASET_BOS_PATH} ${INPUT_DATA} --restart --quiet --yes
 fi
 
 echo "Download data done."

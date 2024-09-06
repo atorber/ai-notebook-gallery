@@ -83,14 +83,13 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
         PP = models[MODEL_NAME][2]
     # print('MODEL_BOS_PATH：', MODEL_BOS_PATH)
 
-    LOAD = MODEL_BOS_PATH.replace('bos:', MOUNT_PATH)
+    LOAD = f'{MOUNT_PATH}/models/{MODEL_NAME}/hf/{'/'.join(MODEL_BOS_PATH.split('/')[2:])}'
     # print('LOAD：', LOAD)
 
     TOKENIZER_PATH = LOAD
     # print('TOKENIZER_PATH：', TOKENIZER_PATH)
 
-    CHECKPOINT_PATH = MODEL_BOS_PATH.replace(
-        'bos:', f'{MOUNT_PATH}/mcore') + f'/tp{TP}_pp{PP}'
+    CHECKPOINT_PATH = f'{MOUNT_PATH}/models/{MODEL_NAME}/mcore/{'/'.join(MODEL_BOS_PATH.split('/')[2:])}/tp{TP}_pp{PP}'
     # print('CHECKPOINT_PATH：', CHECKPOINT_PATH)
 
     datasets = get_datasets_from_csv(datasets_file_path)
@@ -98,41 +97,23 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
     DATASET_BOS_PATH = datasets[DATASET_NAME]
     # print('DATASET_BOS_PATH：', DATASET_BOS_PATH)
 
-    INPUT_DATA = DATASET_BOS_PATH.replace('bos:', MOUNT_PATH)
+    INPUT_DATA = f'{MOUNT_PATH}/datasets/{'/'.join(DATASET_BOS_PATH.split('/')[2:])}'
     # print('INPUT_DATA_PATH：', INPUT_DATA)
 
     # INPUT_DATA去掉最后的文件名后缀
-    OUTPUT_PREFIX = INPUT_DATA[:INPUT_DATA.rfind('.')]
+    OUTPUT_PREFIX = '.'.join(INPUT_DATA.split('.')[0:-1])
+    # OUTPUT_PREFIX = INPUT_DATA
+
     # print('OUTPUT_PREFIX：', OUTPUT_PREFIX)
 
     DATA_PATH = f'{OUTPUT_PREFIX}_text_document'
     # print('DATA_PATH：', DATA_PATH)
 
-    CHECKPOINT_SAVE_PATH = f'{CHECKPOINT_PATH}/{VERSION}'
+    # CHECKPOINT_SAVE_PATH = f'{CHECKPOINT_PATH}/{VERSION}'
 
     CK_JOB_NAME = f'{MODEL_NAME}-ck-{VERSION}'
     DP_JOB_NAME = f'{MODEL_NAME}-dp-{VERSION}'
     TRAIN_JOB_NAME = f'{MODEL_NAME}-train-{VERSION}'
-
-    parms = {
-        'MODEL_BOS_PATH': MODEL_BOS_PATH,
-        'LOAD': LOAD,
-        'TOKENIZER_PATH': TOKENIZER_PATH,
-        'CHECKPOINT_PATH': CHECKPOINT_PATH,
-        'DATASET_BOS_PATH': DATASET_BOS_PATH,
-        'INPUT_DATA': INPUT_DATA,
-        'OUTPUT_PREFIX': OUTPUT_PREFIX,
-        'DATA_PATH': DATA_PATH,
-        'JSON_KEYS': JSON_KEYS,
-        'CHECKPOINT_SAVE_PATH': CHECKPOINT_SAVE_PATH,
-        'CK_JOB_NAME': CK_JOB_NAME,
-        'DP_JOB_NAME': DP_JOB_NAME,
-        'TRAIN_JOB_NAME': TRAIN_JOB_NAME,
-        'IMAGE': IMAGE,
-        'TRAINING_PHASE': TRAINING_PHASE
-    }
-
-    print(json.dumps(parms, indent=4, ensure_ascii=False))
 
     chain_info = read_chain_info(chain_job_config)
     # print(json.dumps(chain_info, indent=4, ensure_ascii=False))
@@ -185,10 +166,6 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
                 'value': DATASET_BOS_PATH
             },
             {
-                'name': 'INPUT_DATA_PATH',
-                'value': INPUT_DATA
-            },
-            {
                 'name': 'TOKENIZER_PATH',
                 'value': TOKENIZER_PATH
             },
@@ -212,10 +189,6 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
             {
                 'name': 'DATASET_BOS_PATH',
                 'value': DATASET_BOS_PATH
-            },
-            {
-                'name': 'INPUT_DATA_PATH',
-                'value': INPUT_DATA
             },
             {
                 'name': 'TOKENIZER_PATH',
