@@ -7,3 +7,4 @@
 |huggingface/notebooks|huggingface官方开源notebooks|git clone https://github.com/huggingface/notebooks.git|
 |aliyun/pai-examples|阿里PAI开源|git clone https://github.com/aliyun/pai-examples.git|
 |data-science-ipython-notebooks|数据科学-ipython-笔记本|git clone https://github.com/donnemartin/data-science-ipython-notebooks.git||
+|Azure/MachineLearningNotebooks|AzureML开源|git clone https://github.com/Azure/MachineLearningNotebooks.git|
