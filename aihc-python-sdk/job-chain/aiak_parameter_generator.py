@@ -243,6 +243,10 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
 
     train_job['jobSpec']['envs'] = [
         {
+            "name": "CUDA_DEVICE_MAX_CONNECTIONS",
+            "value": "1"
+        },
+        {
             'name': 'DATA_PATH',
             'value': DATA_PATH
         },

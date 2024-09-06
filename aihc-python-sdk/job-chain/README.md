@@ -140,9 +140,3 @@ python3 aiak_parameter_generator.py /job-chain/examples/aiak_demo/chain_info.jso
 ```
 python job_chain.py /job-chain/examples/aiak_demo/chain_info.json
 ```
-
-## 打包
-
-```
-tar -czvf job-chain.tgz job-chain/
-```

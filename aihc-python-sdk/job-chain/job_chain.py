@@ -107,9 +107,12 @@ def create_job_chain(config_file=None, index=None):
 
         logging.info("Creating AI job using openapi...")
 
-        result = create_ai_job(api_config, resourcePoolId, jobs[index])
+        cur_job_info = jobs[index]
+
+        result = create_ai_job(api_config, resourcePoolId, cur_job_info)
         logging.info('result: %s', result)
 
+        print('aijoblist url: https://console.bce.baidu.com/aihc/tasks')
     except (FileNotFoundError, IndexError, json.JSONDecodeError) as e:
         logging.error("Error: %s", e)
     except Exception as e:

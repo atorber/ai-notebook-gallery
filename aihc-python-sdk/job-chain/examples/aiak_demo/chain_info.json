@@ -124,6 +124,10 @@
                 "enableRDMA": true,
                 "envs": [
                     {
+                        "name": "CUDA_DEVICE_MAX_CONNECTIONS",
+                        "value": "1"
+                    },
+                    {
                         "name": "DATA_PATH",
                         "value": "/root/pfs/cce-ai-datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test_text_document"
                     },
