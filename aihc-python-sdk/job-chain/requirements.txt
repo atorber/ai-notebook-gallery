@@ -1,3 +1,4 @@
 bce-python-sdk-next==100.9.19.2
 future==1.0.0
 pycryptodome==3.20.0
+python-dotenv==1.0.1

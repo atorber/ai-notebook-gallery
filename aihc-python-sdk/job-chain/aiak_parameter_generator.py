@@ -3,10 +3,23 @@
 import csv
 import json
 import sys
+from dotenv import load_dotenv
+import os
+
+# 加载.env文件
+load_dotenv()
+
+# 获取配置信息, 从环境变量中获取,需要先在.env文件中设置环境变量
+ak = os.getenv("AK")
+sk = os.getenv("SK")
+host = os.getenv("HOST")
+
+# print(ak, sk, host)
 
 # 指定文件路径
 models_file_path = './aiak_dict/models.csv'
 datasets_file_path = './aiak_dict/datasets.csv'
+chain_info_template_path = './aiak_dict/chain_info_template.json'
 
 
 def get_models_from_csv(file_path):
@@ -39,7 +52,7 @@ def get_datasets_from_csv(file_path):
 
 
 def read_chain_info(file_path):
-    with open(file_path, 'r') as f:
+    with open(file_path, mode='r', encoding='utf-8') as f:
         return json.load(f)
 
 
@@ -83,13 +96,15 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
         PP = models[MODEL_NAME][2]
     # print('MODEL_BOS_PATH：', MODEL_BOS_PATH)
 
-    LOAD = f'{MOUNT_PATH}/models/{MODEL_NAME}/hf/{'/'.join(MODEL_BOS_PATH.split('/')[2:])}'
+    save_path = '/'.join(MODEL_BOS_PATH.split('/')[2:])
+
+    LOAD = f'{MOUNT_PATH}/models/{MODEL_NAME}/hf/{save_path}'
     # print('LOAD：', LOAD)
 
     TOKENIZER_PATH = LOAD
     # print('TOKENIZER_PATH：', TOKENIZER_PATH)
 
-    CHECKPOINT_PATH = f'{MOUNT_PATH}/models/{MODEL_NAME}/mcore/{'/'.join(MODEL_BOS_PATH.split('/')[2:])}/tp{TP}_pp{PP}'
+    CHECKPOINT_PATH = f'{MOUNT_PATH}/models/{MODEL_NAME}/mcore/{save_path}/tp{TP}_pp{PP}'
     # print('CHECKPOINT_PATH：', CHECKPOINT_PATH)
 
     datasets = get_datasets_from_csv(datasets_file_path)
@@ -97,11 +112,16 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
     DATASET_BOS_PATH = datasets[DATASET_NAME]
     # print('DATASET_BOS_PATH：', DATASET_BOS_PATH)
 
-    INPUT_DATA = f'{MOUNT_PATH}/datasets/{'/'.join(DATASET_BOS_PATH.split('/')[2:])}'
+    save_path = '/'.join(DATASET_BOS_PATH.split('/')[2:])
+    INPUT_DATA = f'{MOUNT_PATH}/datasets/{save_path}'
     # print('INPUT_DATA_PATH：', INPUT_DATA)
 
+    save_path = '.'.join(INPUT_DATA.split('.')[0:-1])
+
+    DATA_CACHE_PATH = f'{save_path}_cache'
+
     # INPUT_DATA去掉最后的文件名后缀
-    OUTPUT_PREFIX = '.'.join(INPUT_DATA.split('.')[0:-1])
+    OUTPUT_PREFIX = save_path
     # OUTPUT_PREFIX = INPUT_DATA
 
     # print('OUTPUT_PREFIX：', OUTPUT_PREFIX)
@@ -111,19 +131,22 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
 
     # CHECKPOINT_SAVE_PATH = f'{CHECKPOINT_PATH}/{VERSION}'
 
-    CK_JOB_NAME = f'{MODEL_NAME}-ck-{VERSION}'
-    DP_JOB_NAME = f'{MODEL_NAME}-dp-{VERSION}'
-    TRAIN_JOB_NAME = f'{MODEL_NAME}-train-{VERSION}'
+    CK_JOB_NAME = f'{TRAINING_PHASE}-{MODEL_NAME}-ck-{VERSION}'
+    DP_JOB_NAME = f'{TRAINING_PHASE}-{MODEL_NAME}-dp-{VERSION}'
+    TRAIN_JOB_NAME = f'{TRAINING_PHASE}-{MODEL_NAME}-train-{VERSION}'
 
-    chain_info = read_chain_info(chain_job_config)
+    chain_info = read_chain_info(chain_info_template_path)
     # print(json.dumps(chain_info, indent=4, ensure_ascii=False))
 
     # chain_info['config_path'] = chain_job_config
 
+    chain_info['api_config']['ak'] = ak
+    chain_info['api_config']['sk'] = sk
+    chain_info['api_config']['host'] = host
+
     ck_job = chain_info['jobs'][0]
     ck_job['jobSpec']['image'] = IMAGE
     ck_job['name'] = CK_JOB_NAME
-
     ck_job['jobSpec']['envs'] = [
         {
             'name': 'MODEL_BOS_PATH',
@@ -214,24 +237,62 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
     train_job['jobSpec']['image'] = IMAGE
     train_job['name'] = TRAIN_JOB_NAME
 
-    train_job['jobSpec']['envs'] = [
-        {
-            "name": "CUDA_DEVICE_MAX_CONNECTIONS",
-            "value": "1"
-        },
-        {
-            'name': 'DATA_PATH',
-            'value': DATA_PATH
-        },
-        {
-            'name': 'TOKENIZER_PATH',
-            'value': TOKENIZER_PATH
-        },
-        {
-            'name': 'CHECKPOINT_PATH',
-            'value': CHECKPOINT_PATH
-        }
-    ]
+
+# =${DATA_PATH:-"/mnt/cluster/aiak-training-llm/dataset/sft_aplaca_zh_data.json"}
+
+# =${DATA_CACHE_PATH:-"/mnt/cluster/aiak-training-llm/qwen2/sft_aplaca_zh_data_cache"}
+
+# DATASET_CONFIG_PATH=${DATASET_CONFIG_PATH:-"/workspace/AIAK-Training-LLM/configs/sft_dataset_config.json"}
+
+# =${TOKENIZER_PATH:-"/mnt/cluster/leoli/qwen/Qwen2-7B-HF"}
+
+# =${CHECKPOINT_PATH:-"/mnt/cluster/leoli/qwen/Qwen2_7B_mcore_tp1pp1"}
+
+# TENSORBOARD_PATH=${TENSORBOARD_PATH:-"/mnt/cluster/leoli/qwen/tensorboard-log/qwen2-7b-sft"}
+
+    if TRAINING_PHASE == 'sft':
+        train_job['jobSpec']['envs'] = [
+            {
+                'name': 'CUDA_DEVICE_MAX_CONNECTIONS',
+                'value': '1'
+            },
+            {
+                'name': 'DATA_PATH',
+                'value': INPUT_DATA
+            },
+            {
+                'name': 'DATA_CACHE_PATH',
+                'value': DATA_CACHE_PATH
+            },
+            {
+                'name': 'TOKENIZER_PATH',
+                'value': TOKENIZER_PATH
+            },
+            {
+                'name': 'CHECKPOINT_PATH',
+                'value': CHECKPOINT_PATH
+            },
+        ]
+
+    else:
+        train_job['jobSpec']['envs'] = [
+            {
+                "name": "CUDA_DEVICE_MAX_CONNECTIONS",
+                "value": "1"
+            },
+            {
+                'name': 'DATA_PATH',
+                'value': DATA_PATH
+            },
+            {
+                'name': 'TOKENIZER_PATH',
+                'value': TOKENIZER_PATH
+            },
+            {
+                'name': 'CHECKPOINT_PATH',
+                'value': CHECKPOINT_PATH
+            }
+        ]
 
     SH_PATH = (
         '/workspace/AIAK-Training-LLM/examples/'
@@ -257,9 +318,15 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
 
     # print(json.dumps(chain_info, indent=4, ensure_ascii=False))
 
+    chain_job_config = f'{chain_job_config}/{TRAIN_JOB_NAME}.json'
     with open(chain_job_config, 'w') as f:
         json.dump(chain_info, f, indent=4, ensure_ascii=False)
-        print('写入完成', chain_job_config)
+
+    print('=============================\n')
+    print('任务配置信息：', json.dumps(aiak_job_info, ensure_ascii=False))
+    print('任务配置文件已生成：', chain_job_config)
+    print('启动任务：', f'python job_chain.py {chain_job_config}')
+    print('\n=============================')
 
 
 if __name__ == '__main__':

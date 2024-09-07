@@ -16,6 +16,7 @@ save_platform=huggingface
 
 AIAK_TRAINING_PATH=/workspace/AIAK-Training-LLM
 CONVERT_CHECKPOINT_PATH="$AIAK_TRAINING_PATH/tools/convert_checkpoint"
+MEGATRON_PATH=${MEGATRON_PATH:-"/workspace/AIAK-Megatron"}
 
 echo "Start to convert checkpoint..."
 
@@ -28,7 +29,9 @@ python $CONVERT_CHECKPOINT_PATH/model.py \
     --pipeline_model_parallel_size=${PP} \
     --load_ckpt_path=$LOAD \
     --save_ckpt_path=$SAVE \
+    --megatron_path=$MEGATRON_PATH \
     --no_save_optim \
-    --no_load_optim
+    --no_load_optim \
+    --safetensors
 
 echo "Convert checkpoint done."

@@ -1,0 +1,169 @@
+{
+    "scrips_path": "/root/pfs/dev-test/job-chain/job_chain.py",
+    "config_path": "/root/pfs/dev-test/job-chain/examples/aiak_demo/chain_info.json",
+    "api_config": {
+        "host": "aihc.bj.baidubce.com",
+        "ak": "",
+        "sk": ""
+    },
+    "resourcePoolId": "cce-e0isdmib",
+    "jobs": [
+        {
+            "name": "pretrain-llama2-70b-ck-v1",
+            "jobSpec": {
+                "command": "job1_convert_checkpoint.sh",
+                "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
+                "replicas": 1,
+                "envs": [
+                    {
+                        "name": "MODEL_BOS_PATH",
+                        "value": "bos:/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-70b-hf"
+                    },
+                    {
+                        "name": "MODEL_NAME",
+                        "value": "llama2-70b"
+                    },
+                    {
+                        "name": "TP",
+                        "value": "4"
+                    },
+                    {
+                        "name": "PP",
+                        "value": "4"
+                    },
+                    {
+                        "name": "LOAD",
+                        "value": "/root/pfs/models/llama2-70b/hf/huggingface.co/meta-llama/Llama-2-70b-hf"
+                    },
+                    {
+                        "name": "SAVE",
+                        "value": "/root/pfs/models/llama2-70b/mcore/huggingface.co/meta-llama/Llama-2-70b-hf/tp4_pp4"
+                    }
+                ]
+            },
+            "labels": [
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-id",
+                    "value": "69bb4999b2044af8bbda25aec2f1e1f2"
+                },
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-name",
+                    "value": "luyuchao"
+                }
+            ],
+            "datasources": [
+                {
+                    "type": "pfs",
+                    "name": "pfs-oYQuh4",
+                    "mountPath": "/root/pfs"
+                }
+            ],
+            "queue": "default",
+            "priority": "normal",
+            "jobFramework": "PyTorchJob"
+        },
+        {
+            "queue": "default",
+            "priority": "normal",
+            "jobFramework": "PyTorchJob",
+            "name": "pretrain-llama2-70b-dp-v1",
+            "jobSpec": {
+                "command": "job2_pretrain_data_preprocess.sh",
+                "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
+                "replicas": 1,
+                "envs": [
+                    {
+                        "name": "DATASET_BOS_PATH",
+                        "value": "bos:/cce-ai-datasets/datasets/aiak/WuDaoCorpus2.0_base_sample.jsonl"
+                    },
+                    {
+                        "name": "TOKENIZER_PATH",
+                        "value": "/root/pfs/models/llama2-70b/hf/huggingface.co/meta-llama/Llama-2-70b-hf"
+                    },
+                    {
+                        "name": "INPUT_DATA",
+                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample.jsonl"
+                    },
+                    {
+                        "name": "OUTPUT_PREFIX",
+                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample"
+                    },
+                    {
+                        "name": "JSON_KEYS",
+                        "value": "text"
+                    }
+                ]
+            },
+            "labels": [
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-id",
+                    "value": "69bb4999b2044af8bbda25aec2f1e1f2"
+                },
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-name",
+                    "value": "luyuchao"
+                }
+            ],
+            "datasources": [
+                {
+                    "type": "pfs",
+                    "name": "pfs-oYQuh4",
+                    "mountPath": "/root/pfs"
+                }
+            ]
+        },
+        {
+            "queue": "default",
+            "priority": "normal",
+            "jobFramework": "PyTorchJob",
+            "name": "pretrain-llama2-70b-train-v1",
+            "jobSpec": {
+                "command": "bash /workspace/AIAK-Training-LLM/examples/llama2/pretrain/pretrain_llama2_70b.sh",
+                "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
+                "replicas": 4,
+                "resources": [
+                    {
+                        "name": "baidu.com/a800_80g_cgpu",
+                        "quantity": 8
+                    }
+                ],
+                "enableRDMA": true,
+                "envs": [
+                    {
+                        "name": "CUDA_DEVICE_MAX_CONNECTIONS",
+                        "value": "1"
+                    },
+                    {
+                        "name": "DATA_PATH",
+                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample_text_document"
+                    },
+                    {
+                        "name": "TOKENIZER_PATH",
+                        "value": "/root/pfs/models/llama2-70b/hf/huggingface.co/meta-llama/Llama-2-70b-hf"
+                    },
+                    {
+                        "name": "CHECKPOINT_PATH",
+                        "value": "/root/pfs/models/llama2-70b/mcore/huggingface.co/meta-llama/Llama-2-70b-hf/tp4_pp4"
+                    }
+                ]
+            },
+            "labels": [
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-id",
+                    "value": "69bb4999b2044af8bbda25aec2f1e1f2"
+                },
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-name",
+                    "value": "luyuchao"
+                }
+            ],
+            "datasources": [
+                {
+                    "type": "pfs",
+                    "name": "pfs-oYQuh4",
+                    "mountPath": "/root/pfs"
+                }
+            ]
+        }
+    ]
+}

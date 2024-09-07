@@ -9,7 +9,7 @@
     "resourcePoolId": "cce-e0isdmib",
     "jobs": [
         {
-            "name": "llama2-7b-ck-luyc-v4",
+            "name": "pretrain-qwen2-7b-ck-v2",
             "jobSpec": {
                 "command": "job1_convert_checkpoint.sh",
                 "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
@@ -17,11 +17,11 @@
                 "envs": [
                     {
                         "name": "MODEL_BOS_PATH",
-                        "value": "bos:/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-7b-hf"
+                        "value": "bos:/cce-ai-models/huggingface.co/Qwen/Qwen2-7B-Instruct"
                     },
                     {
                         "name": "MODEL_NAME",
-                        "value": "llama2-7b"
+                        "value": "qwen2-7b"
                     },
                     {
                         "name": "TP",
@@ -33,11 +33,11 @@
                     },
                     {
                         "name": "LOAD",
-                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
+                        "value": "/root/pfs/models/qwen2-7b/hf/huggingface.co/Qwen/Qwen2-7B-Instruct"
                     },
                     {
                         "name": "SAVE",
-                        "value": "/root/pfs/models/llama2-7b/mcore/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
+                        "value": "/root/pfs/models/qwen2-7b/mcore/huggingface.co/Qwen/Qwen2-7B-Instruct/tp1_pp1"
                     }
                 ]
             },
@@ -48,7 +48,7 @@
                 },
                 {
                     "key": "aijob.cce.baidubce.com/ai-user-name",
-                    "value": "zhangsan"
+                    "value": "luyuchao"
                 }
             ],
             "datasources": [
@@ -66,7 +66,7 @@
             "queue": "default",
             "priority": "normal",
             "jobFramework": "PyTorchJob",
-            "name": "llama2-7b-dp-luyc-v4",
+            "name": "pretrain-qwen2-7b-dp-v2",
             "jobSpec": {
                 "command": "job2_pretrain_data_preprocess.sh",
                 "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
@@ -74,19 +74,19 @@
                 "envs": [
                     {
                         "name": "DATASET_BOS_PATH",
-                        "value": "bos:/cce-ai-datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test.jsonl"
+                        "value": "bos:/cce-ai-datasets/datasets/aiak/WuDaoCorpus2.0_base_sample.jsonl"
                     },
                     {
                         "name": "TOKENIZER_PATH",
-                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
+                        "value": "/root/pfs/models/qwen2-7b/hf/huggingface.co/Qwen/Qwen2-7B-Instruct"
                     },
                     {
                         "name": "INPUT_DATA",
-                        "value": "/root/pfs/datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test.jsonl"
+                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample.jsonl"
                     },
                     {
                         "name": "OUTPUT_PREFIX",
-                        "value": "/root/pfs/datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test"
+                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample"
                     },
                     {
                         "name": "JSON_KEYS",
@@ -94,6 +94,16 @@
                     }
                 ]
             },
+            "labels": [
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-id",
+                    "value": "69bb4999b2044af8bbda25aec2f1e1f2"
+                },
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-name",
+                    "value": "luyuchao"
+                }
+            ],
             "datasources": [
                 {
                     "type": "pfs",
@@ -106,9 +116,9 @@
             "queue": "default",
             "priority": "normal",
             "jobFramework": "PyTorchJob",
-            "name": "llama2-7b-train-luyc-v4",
+            "name": "pretrain-qwen2-7b-train-v2",
             "jobSpec": {
-                "command": "bash /workspace/AIAK-Training-LLM/examples/llama2/pretrain/pretrain_llama2_7b.sh",
+                "command": "bash /workspace/AIAK-Training-LLM/examples/qwen2/pretrain/pretrain_qwen2_7b.sh",
                 "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
                 "replicas": 1,
                 "resources": [
@@ -125,18 +135,28 @@
                     },
                     {
                         "name": "DATA_PATH",
-                        "value": "/root/pfs/datasets/cce-ai-datasets.bj.bcebos.com/megatron_llama/pile_llama_test/pile_test_jsonl/test_text_document"
+                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample_text_document"
                     },
                     {
                         "name": "TOKENIZER_PATH",
-                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
+                        "value": "/root/pfs/models/qwen2-7b/hf/huggingface.co/Qwen/Qwen2-7B-Instruct"
                     },
                     {
                         "name": "CHECKPOINT_PATH",
-                        "value": "/root/pfs/models/llama2-7b/mcore/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
+                        "value": "/root/pfs/models/qwen2-7b/mcore/huggingface.co/Qwen/Qwen2-7B-Instruct/tp1_pp1"
                     }
                 ]
             },
+            "labels": [
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-id",
+                    "value": "69bb4999b2044af8bbda25aec2f1e1f2"
+                },
+                {
+                    "key": "aijob.cce.baidubce.com/ai-user-name",
+                    "value": "luyuchao"
+                }
+            ],
             "datasources": [
                 {
                     "type": "pfs",

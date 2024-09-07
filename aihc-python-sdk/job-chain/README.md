@@ -9,6 +9,7 @@ Job-Chain是一个用于管理AIHC任务的工具，它可以帮助用户快速�
 pip install future
 pip install pycryptodome
 pip install bce-python-sdk-next
+pip install python-dotenv
 
 # 或者
 pip install -r requirements.txt
@@ -79,7 +80,7 @@ pip install -r requirements.txt
 从第一个任务开始执行，需要指定任务配置文件的路径，当前一个任务执行完成后，会自动创建下一个任务
 
 ```bash
-python job_chain.py /job-chain/examples/job_info/chain_info.json
+python job_chain.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/job_info/chain_info.json
 
 ## 从指定任务开始执行
 
@@ -88,7 +89,7 @@ python job_chain.py /job-chain/examples/job_info/chain_info.json
 以下示例为从第二个任务开始创建：
 
 ```bash
-python job_chain.py /job-chain/examples/job_info/chain_info.json 1
+python job_chain.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/job_info/chain_info.json 1
 ```
 
 ## 实现原理
@@ -99,9 +100,11 @@ python job_chain.py /job-chain/examples/job_info/chain_info.json 1
 
 ## AIAK最佳实践
 
+### 提交AIAK训练任务
+
 1. 修改aiak_job_info.json中的训练参数
 
-```
+```JSON
 {
     "MODEL_NAME": "llama2-7b",
     "REPLICAS": "1",
@@ -131,12 +134,42 @@ python job_chain.py /job-chain/examples/job_info/chain_info.json 1
 
 2. 生成aiak任务的chain_info.json配置文件
 
+```bash
+# pretrain
+python aiak_parameter_generator.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo/aiak_pretrain_job_info.json
+
+# sft
+python aiak_parameter_generator.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo/aiak_sft_job_info.json
 ```
-python3 aiak_parameter_generator.py /job-chain/examples/aiak_demo/chain_info.json /job-chain/examples/aiak_demo/aiak_job_info.json
-```
+
+格式：python aiak_parameter_generator.py {chain_info_output_path} {aiak_job_info.json}
+
+-- chain_info_output_path 任务配置信息输出文件目录
+
+-- aiak_job_info.json aiak任务参数配置文件路径
 
 3. 使用生成的配置文件提交任务
 
 ```
-python job_chain.py /job-chain/examples/aiak_demo/chain_info.json
+# pretrain
+python job_chain.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo/aiak_pretrain_chain_info.json
+
+# sft
+python /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo/aiak_sft_chain_info.json
 ```
+
+### 模型支持
+
+> 此列表为测试验证过可以使用Job-Chain快速运行的模型，非AIAK支持的全部模型
+
+|模型名称|pretrain|sft|推荐实例数|
+|--|--|--|--|
+|llama2-7b|✅|✅|1|
+|llama2-13b|✅|✅|2|
+|llama2-70b|✅|✅|4|
+|llama3-8b|❌|❌|2|
+|llama3-70b|❌|❌|8|
+|qwen2-7b|❌|❌|1|
+|qwen2-72b|✅|✅|4|
+|baichuan2-7b|❌|❌|1|
+|baichuan2-13b|❌|❌|1|

@@ -11,7 +11,7 @@ if [ ! -d "${INPUT_DATA}" ]; then
 
     echo "Start to download data..."
     # 下载测试数据集
-    ./bcecmd  bos sync ${DATASET_BOS_PATH} ${INPUT_DATA}
+    ./bcecmd bos cp ${DATASET_BOS_PATH} ${INPUT_DATA} --restart --quiet --yes
 fi
 
 echo "Download data done."
