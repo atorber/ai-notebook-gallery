@@ -9,7 +9,7 @@
     "resourcePoolId": "cce-e0isdmib",
     "jobs": [
         {
-            "name": "sft-qwen2-72b-ck-v1",
+            "name": "sft-llama2-7b-ck-v1",
             "jobSpec": {
                 "command": "job1_convert_checkpoint.sh",
                 "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
@@ -17,27 +17,27 @@
                 "envs": [
                     {
                         "name": "MODEL_BOS_PATH",
-                        "value": "bos:/cce-ai-models/huggingface.co/Qwen/Qwen2-72B-Instruct"
+                        "value": "bos:/cce-ai-datasets/huggingface.co/meta-llama/Llama-2-7b-hf"
                     },
                     {
                         "name": "MODEL_NAME",
-                        "value": "qwen2-72b"
+                        "value": "llama2-7b"
                     },
                     {
                         "name": "TP",
-                        "value": "8"
+                        "value": "1"
                     },
                     {
                         "name": "PP",
-                        "value": "4"
+                        "value": "1"
                     },
                     {
                         "name": "LOAD",
-                        "value": "/root/pfs/models/qwen2-72b/hf/huggingface.co/Qwen/Qwen2-72B-Instruct"
+                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
                     },
                     {
                         "name": "SAVE",
-                        "value": "/root/pfs/models/qwen2-72b/mcore/huggingface.co/Qwen/Qwen2-72B-Instruct/tp8_pp4"
+                        "value": "/root/pfs/models/llama2-7b/mcore/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
                     }
                 ]
             },
@@ -66,7 +66,7 @@
             "queue": "default",
             "priority": "normal",
             "jobFramework": "PyTorchJob",
-            "name": "sft-qwen2-72b-dp-v1",
+            "name": "sft-llama2-7b-dp-v1",
             "jobSpec": {
                 "command": "job2_sft_data_preprocess.sh",
                 "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
@@ -74,23 +74,23 @@
                 "envs": [
                     {
                         "name": "DATASET_BOS_PATH",
-                        "value": "bos:/cce-ai-datasets/datasets/aiak/WuDaoCorpus2.0_base_sample.jsonl"
+                        "value": "bos:/cce-ai-datasets/datasets/aiak/alpaca_zh-llama3-train.json"
                     },
                     {
                         "name": "TOKENIZER_PATH",
-                        "value": "/root/pfs/models/qwen2-72b/hf/huggingface.co/Qwen/Qwen2-72B-Instruct"
+                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
                     },
                     {
                         "name": "INPUT_DATA",
-                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample.jsonl"
+                        "value": "/root/pfs/datasets/datasets/aiak/alpaca_zh-llama3-train.json"
                     },
                     {
                         "name": "OUTPUT_PATH",
-                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample"
+                        "value": "/root/pfs/datasets/datasets/aiak/alpaca_zh-llama3-train"
                     },
                     {
                         "name": "CHAT_TEMPLATE",
-                        "value": "qwen"
+                        "value": "llama2"
                     }
                 ]
             },
@@ -116,11 +116,11 @@
             "queue": "default",
             "priority": "normal",
             "jobFramework": "PyTorchJob",
-            "name": "sft-qwen2-72b-train-v1",
+            "name": "sft-llama2-7b-train-v1",
             "jobSpec": {
-                "command": "bash /workspace/AIAK-Training-LLM/examples/qwen2/finetuning/sft_qwen2_72b.sh",
+                "command": "bash /workspace/AIAK-Training-LLM/examples/llama2/finetuning/sft_llama2_7b.sh",
                 "image": "registry.baidubce.com/aihc-aiak/aiak-training-llm:ubuntu22.04-cu12.3-torch2.2.0-py310-bccl1.2.7.2_v2.1.1.5_release",
-                "replicas": 4,
+                "replicas": 1,
                 "resources": [
                     {
                         "name": "baidu.com/a800_80g_cgpu",
@@ -135,19 +135,19 @@
                     },
                     {
                         "name": "DATA_PATH",
-                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample.jsonl"
+                        "value": "/root/pfs/datasets/datasets/aiak/alpaca_zh-llama3-train.json"
                     },
                     {
                         "name": "DATA_CACHE_PATH",
-                        "value": "/root/pfs/datasets/datasets/aiak/WuDaoCorpus2.0_base_sample_cache"
+                        "value": "/root/pfs/datasets/datasets/aiak/alpaca_zh-llama3-train_cache"
                     },
                     {
                         "name": "TOKENIZER_PATH",
-                        "value": "/root/pfs/models/qwen2-72b/hf/huggingface.co/Qwen/Qwen2-72B-Instruct"
+                        "value": "/root/pfs/models/llama2-7b/hf/huggingface.co/meta-llama/Llama-2-7b-hf"
                     },
                     {
                         "name": "CHECKPOINT_PATH",
-                        "value": "/root/pfs/models/qwen2-72b/mcore/huggingface.co/Qwen/Qwen2-72B-Instruct/tp8_pp4"
+                        "value": "/root/pfs/models/llama2-7b/mcore/huggingface.co/meta-llama/Llama-2-7b-hf/tp1_pp1"
                     }
                 ]
             },
