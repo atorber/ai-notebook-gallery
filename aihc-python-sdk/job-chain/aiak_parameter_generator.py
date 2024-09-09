@@ -131,7 +131,7 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
 
     # CHECKPOINT_SAVE_PATH = f'{CHECKPOINT_PATH}/{VERSION}'
 
-    CK_JOB_NAME = f'{TRAINING_PHASE}-{MODEL_NAME}-ck-{VERSION}'
+    CK_JOB_NAME = f'{TRAINING_PHASE}-{MODEL_NAME}-ck2mc-{VERSION}'
     DP_JOB_NAME = f'{TRAINING_PHASE}-{MODEL_NAME}-dp-{VERSION}'
     TRAIN_JOB_NAME = f'{TRAINING_PHASE}-{MODEL_NAME}-train-{VERSION}'
 

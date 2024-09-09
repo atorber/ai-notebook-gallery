@@ -155,7 +155,7 @@ python aiak_parameter_generator.py /root/pfs/dev-test/ai-notebook-gallery/aihc-p
 python job_chain.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo/aiak_pretrain_chain_info.json
 
 # sft
-python /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo/aiak_sft_chain_info.json
+python job_chain.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-chain/examples/aiak_demo/aiak_sft_chain_info.json
 ```
 
 ### 模型支持
