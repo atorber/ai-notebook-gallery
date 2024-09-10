@@ -110,10 +110,15 @@ def create_job_chain(config_file=None, index=None):
         cur_job_info = jobs[index]
 
         result = create_ai_job(api_config, resourcePoolId, cur_job_info)
+        tasks_url = 'https://console.bce.baidu.com/aihc/tasks'
         print('====================================\n')
         logging.info('任务创建结果: %s', result)
         logging.info('查看任务列表: https://console.bce.baidu.com/aihc/tasks')
         print('\n====================================')
+        return {
+            result: result,
+            tasks_url: tasks_url
+        }
     except (FileNotFoundError, IndexError, json.JSONDecodeError) as e:
         logging.error("Error: %s", e)
     except Exception as e:

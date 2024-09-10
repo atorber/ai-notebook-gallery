@@ -322,11 +322,17 @@ def generate_aiak_parameter(chain_job_config=None, aiak_job_config=None):
     with open(chain_job_config, 'w') as f:
         json.dump(chain_info, f, indent=4, ensure_ascii=False)
 
+    run_command = f'python job_chain.py {chain_job_config}'
     print('=============================\n')
     print('任务配置信息：', json.dumps(aiak_job_info, ensure_ascii=False))
     print('任务配置文件已生成：', chain_job_config)
-    print('启动任务：', f'python job_chain.py {chain_job_config}')
+    print('启动任务：', run_command)
     print('\n=============================')
+
+    return {
+        chain_job_config: chain_job_config,
+        run_command: run_command
+    }
 
 
 if __name__ == '__main__':
