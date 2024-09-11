@@ -8,7 +8,7 @@ Job-Chain是一个用于管理AIHC任务的工具，它可以帮助用户快速�
 ```bash
 pip install future
 pip install pycryptodome
-pip install bce-python-sdk-next==100.9.19.12
+pip install bce-python-sdk-next==100.9.19.16
 pip install python-dotenv
 
 # 或者
