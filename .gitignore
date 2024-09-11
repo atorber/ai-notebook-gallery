@@ -1,3 +1,4 @@
 aihc-python-sdk/.env
 test.md
 aihc-python-sdk/job-chain/.DS_Store
+aihc-python-sdk/job-chain/__pycache__/*
