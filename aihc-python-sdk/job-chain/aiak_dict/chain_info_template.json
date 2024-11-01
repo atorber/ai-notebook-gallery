@@ -1,11 +1,4 @@
 {
-    "scrips_path": "/root/pfs/dev-test/job-chain/job_chain.py",
-    "config_path": "/root/pfs/dev-test/job-chain/examples/aiak_demo/chain_info.json",
-    "api_config": {
-        "host": "aihc.bj.baidubce.com",
-        "ak": "",
-        "sk": ""
-    },
     "resourcePoolId": "cce-e0isdmib",
     "jobs": [
         {

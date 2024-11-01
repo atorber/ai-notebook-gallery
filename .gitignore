@@ -2,3 +2,7 @@ aihc-python-sdk/.env
 test.md
 aihc-python-sdk/job-chain/.DS_Store
 aihc-python-sdk/job-chain/__pycache__/*
+aihc-python-sdk/.env
+aihc-python-sdk/job-chain/examples/aiak_demo/*.json
+aihc-python-sdk/job-chain/examples/aiak_demo/*.json
+

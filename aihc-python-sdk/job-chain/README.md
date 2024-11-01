@@ -169,7 +169,7 @@ python job_chain.py /root/pfs/dev-test/ai-notebook-gallery/aihc-python-sdk/job-c
 |llama2-70b|✅|✅|4|
 |llama3-8b|❌|❌|2|
 |llama3-70b|❌|❌|8|
-|qwen2-7b|❌|❌|1|
+|qwen2-7b|✅|✅|1|
 |qwen2-72b|✅|✅|4|
 |baichuan2-7b|❌|❌|1|
 |baichuan2-13b|❌|❌|1|
